@@ -21,14 +21,13 @@ public class UserPosDao {
 	public void salvar (UserPosJava userposJava) {
 		
 		try {
-			String sql = "insert into userposjava(id,nome,email)values(?,?,?)";
+			String sql = "insert into userposjava(nome,email)values(?,?)";
 			// Prepara o Insert
 			PreparedStatement insert = connection.prepareStatement(sql);
 			
 			//Dinamicos os dados
-			insert.setLong(1,userposJava.getId());
-			insert.setString(2, userposJava.getNome());
-			insert.setString(3,userposJava.getEmail() );
+			insert.setString(1, userposJava.getNome());
+			insert.setString(2,userposJava.getEmail() );
 			insert.execute();
 			connection.commit(); //salva no bd
 		} catch (Exception e) {
