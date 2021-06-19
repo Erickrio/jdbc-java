@@ -2,7 +2,10 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import conexaojdbc.SingleConnection;
 import model.UserPosJava;
@@ -21,10 +24,6 @@ public class UserPosDao {
 			String sql = "insert into userposjava(id,nome,email)values(?,?,?)";
 			// Prepara o Insert
 			PreparedStatement insert = connection.prepareStatement(sql);
-			//Estaticos os dados
-//			insert.setLong(1, 2);
-//			insert.setString(2, "Erick - Salvado Dao");
-//			insert.setString(3, "erick@teste.com");
 			
 			//Dinamicos os dados
 			insert.setLong(1,userposJava.getId());
@@ -40,5 +39,52 @@ public class UserPosDao {
 			}
 			e.printStackTrace();
 		}
+	}
+	
+	public List<UserPosJava> listar () throws Exception {
+		List<UserPosJava> list = new ArrayList<>();
+		
+		String sql = "select * from userposjava";
+		
+		PreparedStatement statement= connection.prepareStatement(sql);
+		ResultSet resultado= statement.executeQuery();
+		
+		//enquanto tiver dados na lista
+		while (resultado.next()) {
+			//instanciar objetos
+			UserPosJava userposjava= new UserPosJava();
+			userposjava.setId(resultado.getLong("id"));
+			userposjava.setNome(resultado.getString("nome"));
+			userposjava.setEmail(resultado.getString("email"));
+			list.add(userposjava);
+		}
+		
+		return list;
+		
+	}
+	
+	//Retorna apenas uma lista
+	public UserPosJava buscar (Long id) throws Exception {
+		
+		UserPosJava retorno = new UserPosJava();
+		
+		String sql = "select * from userposjava where id = "+ id;
+		
+		//prepara o Statement
+		PreparedStatement statement= connection.prepareStatement(sql);
+		//executa a consulta
+		ResultSet resultado= statement.executeQuery();
+		
+		//enquanto tiver dados na lista
+		while (resultado.next()) { //retorna apenas 1 ou nenhum
+		
+			retorno.setId(resultado.getLong("id"));
+			retorno.setNome(resultado.getString("nome"));
+			retorno.setEmail(resultado.getString("email"));
+			
+		}
+		
+		return retorno;
+		
 	}
 }
